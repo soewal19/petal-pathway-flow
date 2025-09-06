@@ -47,6 +47,14 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        floral: {
+          pink: "hsl(var(--floral-pink))",
+          "pink-light": "hsl(var(--floral-pink-light))",
+          green: "hsl(var(--floral-green))",
+          "green-light": "hsl(var(--floral-green-light))",
+          cream: "hsl(var(--floral-cream))",
+          sage: "hsl(var(--floral-sage))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -62,6 +70,14 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      backgroundImage: {
+        "gradient-floral": "var(--gradient-floral)",
+        "gradient-soft": "var(--gradient-soft)",
+      },
+      boxShadow: {
+        floral: "var(--shadow-floral)",
+        card: "var(--shadow-card)",
       },
       keyframes: {
         "accordion-down": {
