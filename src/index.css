@@ -8,49 +8,33 @@ All colors MUST be HSL.
 
 @layer base {
 :root {
-    --background: 252 100% 99%;
-    --foreground: 156 32% 20%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
 
     --card: 0 0% 100%;
-    --card-foreground: 156 32% 20%;
+    --card-foreground: 0 0% 0%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 156 32% 20%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 340 75% 58%;
+    --primary: 214 100% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 142 25% 95%;
-    --secondary-foreground: 156 32% 20%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 20%;
 
-    --muted: 142 15% 96%;
-    --muted-foreground: 156 15% 50%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 340 45% 96%;
-    --accent-foreground: 340 75% 45%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 9%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 142 20% 88%;
-    --input: 142 20% 92%;
-    --ring: 340 75% 58%;
-
-    /* Floral design tokens */
-    --floral-pink: 340 75% 58%;
-    --floral-pink-light: 340 45% 96%;
-    --floral-green: 142 45% 45%;
-    --floral-green-light: 142 25% 95%;
-    --floral-cream: 45 25% 98%;
-    --floral-sage: 156 15% 70%;
-
-    /* Gradients */
-    --gradient-floral: linear-gradient(135deg, hsl(var(--floral-pink)) 0%, hsl(var(--floral-green)) 100%);
-    --gradient-soft: linear-gradient(180deg, hsl(var(--floral-cream)) 0%, hsl(var(--floral-pink-light)) 100%);
-
-    /* Shadows */
-    --shadow-floral: 0 4px 20px -4px hsl(var(--floral-pink) / 0.15);
-    --shadow-card: 0 2px 12px -2px hsl(var(--floral-green) / 0.08);
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 214 100% 50%;
 
     --radius: 0.5rem;
 

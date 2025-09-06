@@ -1,8 +1,6 @@
-import { useState } from 'react';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Heart, ShoppingCart, Plus, Minus } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { Flower } from '@/types/flower';
 import { useCart } from '@/hooks/useCart';
 import { useToast } from '@/hooks/use-toast';
@@ -15,92 +13,45 @@ interface FlowerCardProps {
 const FlowerCard = ({ flower, onToggleFavorite }: FlowerCardProps) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
-  const [quantity, setQuantity] = useState(1);
 
   const handleAddToCart = () => {
-    addToCart(flower, quantity);
+    addToCart(flower, 1);
     toast({
-      title: "Added to cart",
-      description: `${quantity}x ${flower.name} added to your cart`,
+      title: "Item added",
+      description: "The item should added in the Shopping Cart",
     });
-    setQuantity(1);
   };
 
   return (
-    <Card className="group hover:shadow-floral transition-all duration-300 overflow-hidden">
-      <CardContent className="p-0">
-        <div className="relative overflow-hidden">
-          <img 
-            src={flower.image} 
-            alt={flower.name}
-            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-          {flower.isFavorite && (
-            <Badge variant="secondary" className="absolute top-2 left-2">
-              <Heart className="h-3 w-3 mr-1 fill-floral-pink text-floral-pink" />
-              Favorite
-            </Badge>
-          )}
+    <Card className="border border-border">
+      <CardContent className="p-4">
+        <div className="relative mb-3">
+          <div className="w-full h-32 bg-gray-100 border flex items-center justify-center mb-2">
+            <Heart className="h-8 w-8 text-gray-300" />
+          </div>
           <Button
             variant="ghost"
             size="sm"
-            className="absolute top-2 right-2 h-8 w-8 p-0 bg-white/80 hover:bg-white/90"
+            className="absolute top-1 right-1 h-6 w-6 p-0"
             onClick={() => onToggleFavorite?.(flower.id)}
           >
             <Heart 
-              className={`h-4 w-4 ${flower.isFavorite ? 'fill-floral-pink text-floral-pink' : 'text-floral-sage'}`} 
+              className={`h-4 w-4 ${flower.isFavorite ? 'fill-current' : ''}`} 
             />
           </Button>
         </div>
         
-        <div className="p-4">
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="font-semibold text-lg">{flower.name}</h3>
-            <span className="text-lg font-bold text-floral-pink">
-              ${flower.price}
-            </span>
-          </div>
-          
-          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-            {flower.description}
-          </p>
-          
-          <div className="text-xs text-floral-sage">
-            Shop: {flower.shop}
-          </div>
+        <div className="space-y-2">
+          <h3 className="font-medium text-sm">{flower.name}</h3>
+          <Button 
+            onClick={handleAddToCart}
+            className="w-full text-xs py-1 h-7"
+            size="sm"
+          >
+            add to Cart
+          </Button>
         </div>
       </CardContent>
-      
-      <CardFooter className="px-4 pb-4 pt-0 flex items-center gap-2">
-        <div className="flex items-center border rounded-md">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0"
-            onClick={() => setQuantity(Math.max(1, quantity - 1))}
-          >
-            <Minus className="h-3 w-3" />
-          </Button>
-          <span className="px-3 py-1 text-sm font-medium">{quantity}</span>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0"
-            onClick={() => setQuantity(quantity + 1)}
-          >
-            <Plus className="h-3 w-3" />
-          </Button>
-        </div>
-        
-        <Button 
-          onClick={handleAddToCart}
-          className="flex-1"
-          size="sm"
-        >
-          <ShoppingCart className="h-4 w-4 mr-2" />
-          Add to Cart
-        </Button>
-      </CardFooter>
     </Card>
   );
 };
