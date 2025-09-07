@@ -3,12 +3,18 @@ import { CartItem, Flower } from '@/types/flower';
 
 export const useCart = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  console.log('useCart hook initialized');
 
   // Load cart from localStorage on mount
   useEffect(() => {
+    console.log('Loading cart from localStorage');
     const savedCart = localStorage.getItem('flowerCart');
     if (savedCart) {
-      setCartItems(JSON.parse(savedCart));
+      const parsedCart = JSON.parse(savedCart);
+      console.log('Loaded cart from localStorage:', parsedCart);
+      setCartItems(parsedCart);
+    } else {
+      console.log('No saved cart found in localStorage');
     }
   }, []);
 

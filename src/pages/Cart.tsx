@@ -21,8 +21,10 @@ interface CustomerInfo {
 }
 
 const Cart = () => {
+  console.log('Cart component is rendering');
   const navigate = useNavigate();
   const { cartItems, removeFromCart, updateQuantity, clearCart, getCartTotal } = useCart();
+  console.log('Cart items:', cartItems);
   const { toast } = useToast();
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
     name: '',
@@ -132,6 +134,7 @@ const Cart = () => {
   };
 
   if (cartItems.length === 0) {
+    console.log('Cart is empty, showing empty state');
     return (
       <div className="min-h-screen bg-gray-50">
         <Header />
@@ -149,6 +152,10 @@ const Cart = () => {
     );
   }
 
+  console.log('Cart has items, rendering full cart page');
+
+  console.log('Rendering cart page main content');
+  
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
