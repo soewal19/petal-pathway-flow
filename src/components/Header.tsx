@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ShoppingCart, Heart, Flower2 } from 'lucide-react';
+import { ShoppingCart, Package } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 
 const Header = () => {
@@ -10,42 +10,59 @@ const Header = () => {
   const cartItemsCount = getCartItemsCount();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center space-x-2">
-          <Flower2 className="h-6 w-6 text-floral-pink" />
-          <span className="text-xl font-bold bg-gradient-floral bg-clip-text text-transparent">
-            FlowerHub
-          </span>
-        </Link>
+    <>
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                <Package className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-xl font-semibold text-gray-800">ELIFTECH</span>
+            </div>
+            <div className="text-right text-sm text-gray-600">
+              <div>+1 302 543 20 12</div>
+              <div>info@eliftech.com</div>
+              <div className="text-blue-600">www.eliftech.com</div>
+            </div>
+          </div>
+        </div>
+      </header>
 
-        <nav className="flex items-center space-x-1">
-          <Button
-            variant={location.pathname === '/shop' ? 'default' : 'ghost'}
-            asChild
-            className="text-sm"
-          >
-            <Link to="/shop">Shop</Link>
-          </Button>
-          
-          <Button
-            variant={location.pathname === '/cart' ? 'default' : 'ghost'}
-            asChild
-            className="text-sm relative"
-          >
-            <Link to="/cart" className="flex items-center space-x-2">
-              <ShoppingCart className="h-4 w-4" />
-              <span className="hidden sm:inline">Cart</span>
+      {/* Navigation */}
+      <nav className="bg-white border-b">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex space-x-8">
+            <Link 
+              to="/shop"
+              className={`py-3 px-4 hover:text-blue-600 border-b-2 transition-colors ${
+                location.pathname === '/shop' 
+                  ? 'text-blue-600 border-blue-600 font-medium'
+                  : 'text-gray-600 border-transparent hover:border-blue-600'
+              }`}
+            >
+              Shop
+            </Link>
+            <Link 
+              to="/cart"
+              className={`py-3 px-4 hover:text-blue-600 border-b-2 transition-colors relative ${
+                location.pathname === '/cart' 
+                  ? 'text-blue-600 border-blue-600 font-medium'
+                  : 'text-gray-600 border-transparent hover:border-blue-600'
+              }`}
+            >
+              Shopping Cart
               {cartItemsCount > 0 && (
-                <Badge variant="secondary" className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                <Badge variant="secondary" className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-blue-600 text-white">
                   {cartItemsCount}
                 </Badge>
               )}
             </Link>
-          </Button>
-        </nav>
-      </div>
-    </header>
+          </div>
+        </div>
+      </nav>
+    </>
   );
 };
 
