@@ -1,20 +1,31 @@
-import { useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { CartItem, Flower } from '@/types/flower';
 
-export const useCart = () => {
+interface CartContextType {
+  cartItems: CartItem[];
+  addToCart: (flower: Flower, quantity?: number) => void;
+  removeFromCart: (flowerId: string) => void;
+  updateQuantity: (flowerId: string, quantity: number) => void;
+  clearCart: () => void;
+  getCartTotal: () => number;
+  getCartItemsCount: () => number;
+}
+
+const CartContext = createContext<CartContextType | undefined>(undefined);
+
+export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  console.log('useCart hook initialized');
 
   // Load cart from localStorage on mount
   useEffect(() => {
-    console.log('Loading cart from localStorage');
     const savedCart = localStorage.getItem('flowerCart');
     if (savedCart) {
-      const parsedCart = JSON.parse(savedCart);
-      console.log('Loaded cart from localStorage:', parsedCart);
-      setCartItems(parsedCart);
-    } else {
-      console.log('No saved cart found in localStorage');
+      try {
+        const parsedCart = JSON.parse(savedCart);
+        setCartItems(parsedCart);
+      } catch (error) {
+        console.error('Error parsing cart from localStorage:', error);
+      }
     }
   }, []);
 
@@ -65,7 +76,7 @@ export const useCart = () => {
     return cartItems.reduce((count, item) => count + item.quantity, 0);
   };
 
-  return {
+  const value = {
     cartItems,
     addToCart,
     removeFromCart,
@@ -74,4 +85,18 @@ export const useCart = () => {
     getCartTotal,
     getCartItemsCount
   };
+
+  return (
+    <CartContext.Provider value={value}>
+      {children}
+    </CartContext.Provider>
+  );
+};
+
+export const useCart = () => {
+  const context = useContext(CartContext);
+  if (context === undefined) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
+  return context;
 };

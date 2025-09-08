@@ -8,8 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Trash2, Plus, Minus, ShoppingBag, Package, X, ShoppingCart } from 'lucide-react';
-import Header from '@/components/Header';
-import { useCart } from '@/hooks/useCart';
+import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
 import { shops } from '@/data/flowers';
 
@@ -21,10 +20,8 @@ interface CustomerInfo {
 }
 
 const Cart = () => {
-  console.log('Cart component is rendering');
   const navigate = useNavigate();
   const { cartItems, removeFromCart, updateQuantity, clearCart, getCartTotal } = useCart();
-  console.log('Cart items:', cartItems);
   const { toast } = useToast();
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
     name: '',
@@ -134,33 +131,22 @@ const Cart = () => {
   };
 
   if (cartItems.length === 0) {
-    console.log('Cart is empty, showing empty state');
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header />
-        <main className="max-w-6xl mx-auto px-4 py-8">
-          <div className="text-center py-16">
-            <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h2 className="text-xl text-gray-500">Your cart is empty</h2>
-            <p className="text-gray-400">Add some products to get started</p>
-            <Button onClick={() => navigate('/shop')} className="mt-4">
-              Continue Shopping
-            </Button>
-          </div>
-        </main>
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="text-center py-16">
+          <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <h2 className="text-xl text-gray-500">Your cart is empty</h2>
+          <p className="text-gray-400">Add some products to get started</p>
+          <Button onClick={() => navigate('/shop')} className="mt-4">
+            Continue Shopping
+          </Button>
+        </div>
       </div>
     );
   }
-
-  console.log('Cart has items, rendering full cart page');
-
-  console.log('Rendering cart page main content');
   
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      
-      <main className="max-w-6xl mx-auto px-4 py-8">
+    <div className="max-w-6xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold text-gray-800 mb-8 flex items-center">
           <ShoppingCart className="w-6 h-6 mr-2" />
           Shopping Cart
@@ -315,7 +301,6 @@ const Cart = () => {
             </div>
           </div>
         </div>
-      </main>
     </div>
   );
 };
