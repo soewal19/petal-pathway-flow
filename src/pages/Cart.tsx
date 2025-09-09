@@ -7,16 +7,19 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Trash2, Plus, Minus, ShoppingBag, Package, X, ShoppingCart } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Trash2, Plus, Minus, ShoppingBag, Package, X, ShoppingCart, MapPin } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
 import { shops } from '@/data/flowers';
+import MapboxMap from '@/components/MapboxMap';
 
 interface CustomerInfo {
   name: string;
   email: string;
   phone: string;
   address: string;
+  coordinates?: [number, number];
 }
 
 const Cart = () => {
@@ -27,10 +30,12 @@ const Cart = () => {
     name: '',
     email: '',
     phone: '',
-    address: ''
+    address: '',
+    coordinates: undefined
   });
   const [errors, setErrors] = useState<Partial<CustomerInfo>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [useMapAddress, setUseMapAddress] = useState(false);
 
   const validateForm = () => {
     const newErrors: Partial<CustomerInfo> = {};
@@ -69,6 +74,17 @@ const Cart = () => {
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  const handleAddressSelect = (address: string, coordinates: [number, number]) => {
+    setCustomerInfo(prev => ({
+      ...prev,
+      address,
+      coordinates
+    }));
+    if (errors.address) {
+      setErrors(prev => ({ ...prev, address: '' }));
     }
   };
 
@@ -214,17 +230,34 @@ const Cart = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Address:
+                  Delivery Address:
                 </label>
-                <Textarea
-                  value={customerInfo.address}
-                  onChange={handleInputChange('address')}
-                  rows={3}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none ${
-                    errors.address ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Enter your delivery address"
-                />
+                <Tabs value={useMapAddress ? "map" : "text"} onValueChange={(value) => setUseMapAddress(value === "map")}>
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="text">Type Address</TabsTrigger>
+                    <TabsTrigger value="map">
+                      <MapPin className="w-4 h-4 mr-1" />
+                      Use Map
+                    </TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="text" className="mt-3">
+                    <Textarea
+                      value={customerInfo.address}
+                      onChange={handleInputChange('address')}
+                      rows={3}
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none ${
+                        errors.address ? 'border-red-500' : 'border-gray-300'
+                      }`}
+                      placeholder="Enter your delivery address"
+                    />
+                  </TabsContent>
+                  <TabsContent value="map" className="mt-3">
+                    <MapboxMap 
+                      onAddressSelect={handleAddressSelect}
+                      initialAddress={customerInfo.address}
+                    />
+                  </TabsContent>
+                </Tabs>
                 {errors.address && (
                   <p className="text-red-500 text-xs mt-1">{errors.address}</p>
                 )}

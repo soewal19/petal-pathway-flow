@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
-import { Package, Heart } from 'lucide-react';
+import { Package, Heart, Receipt } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 
 const Header = () => {
@@ -53,6 +53,17 @@ const Header = () => {
             >
               <Heart className="w-4 h-4 inline mr-1" />
               Favorites
+            </Link>
+            <Link 
+              to="/history"
+              className={`py-3 px-4 hover:text-blue-600 border-b-2 transition-colors ${
+                location.pathname === '/history' 
+                  ? 'text-blue-600 border-blue-600 font-medium'
+                  : 'text-gray-600 border-transparent hover:border-blue-600'
+              }`}
+            >
+              <Receipt className="w-4 h-4 inline mr-1" />
+              History
             </Link>
             <Link 
               to="/cart"

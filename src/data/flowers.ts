@@ -14,6 +14,11 @@ export const shops: Shop[] = [
     id: 'bloomwell',
     name: 'Bloomwell',
     location: '456 Rose Avenue, Petalton'
+  },
+  {
+    id: 'petals-paradise',
+    name: 'Petals Paradise',
+    location: '789 Flower Road, Gardenville'
   }
 ];
 
@@ -76,6 +81,76 @@ export const flowers: Flower[] = [
     description: 'Premium white lilies for special occasions',
     shop: 'Bloomwell',
     dateAdded: new Date('2024-01-08'),
+    isFavorite: false
+  },
+  {
+    id: 'rose-3',
+    name: 'Garden Rose Deluxe',
+    price: 55.99,
+    image: roseBouquet,
+    description: 'Exquisite garden roses for special celebrations',
+    shop: 'Petals Paradise',
+    dateAdded: new Date('2024-01-30'),
+    isFavorite: false
+  },
+  {
+    id: 'tulip-2',
+    name: 'Spring Tulip Mix',
+    price: 28.99,
+    image: tulipBouquet,
+    description: 'Mixed spring tulips in vibrant colors',
+    shop: 'Petals Paradise',
+    dateAdded: new Date('2024-02-01'),
+    isFavorite: false
+  },
+  {
+    id: 'daisy-2',
+    name: 'Wild Daisy Collection',
+    price: 19.99,
+    image: daisyBouquet,
+    description: 'Wild daisies perfect for casual occasions',
+    shop: 'Flowery Fragrant',
+    dateAdded: new Date('2024-02-05'),
+    isFavorite: false
+  },
+  {
+    id: 'lily-3',
+    name: 'Oriental Lily Bouquet',
+    price: 42.99,
+    image: lilyBouquet,
+    description: 'Fragrant oriental lilies with stunning beauty',
+    shop: 'Petals Paradise',
+    dateAdded: new Date('2024-02-10'),
+    isFavorite: false
+  },
+  {
+    id: 'rose-4',
+    name: 'Red Rose Classic',
+    price: 29.99,
+    image: roseBouquet,
+    description: 'Classic red roses for timeless romance',
+    shop: 'Bloomwell',
+    dateAdded: new Date('2024-02-12'),
+    isFavorite: false
+  },
+  {
+    id: 'tulip-3',
+    name: 'Dutch Tulip Premium',
+    price: 35.99,
+    image: tulipBouquet,
+    description: 'Premium Dutch tulips imported fresh',
+    shop: 'Flowery Fragrant',
+    dateAdded: new Date('2024-02-15'),
+    isFavorite: false
+  },
+  {
+    id: 'daisy-3',
+    name: 'English Daisy Bunch',
+    price: 24.99,
+    image: daisyBouquet,
+    description: 'Charming English daisies in a rustic bunch',
+    shop: 'Petals Paradise',
+    dateAdded: new Date('2024-02-18'),
     isFavorite: false
   }
 ];
