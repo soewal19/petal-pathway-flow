@@ -41,8 +41,8 @@ const FlowerCard = ({ flower }: FlowerCardProps) => {
   };
 
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-200">
-      <CardContent className="p-0">
+    <Card className="group hover:shadow-lg transition-all duration-300 border border-gray-200 h-full flex flex-col">
+      <CardContent className="p-0 flex-1 flex flex-col">
         <div className="relative overflow-hidden">
           <img 
             src={flower.image} 
@@ -67,17 +67,19 @@ const FlowerCard = ({ flower }: FlowerCardProps) => {
           </Button>
         </div>
         
-        <div className="p-4">
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="font-semibold text-lg text-gray-800">{flower.name}</h3>
-            <span className="text-lg font-bold text-blue-600">
-              ${flower.price}
-            </span>
+        <div className="p-4 flex-1 flex flex-col justify-between">
+          <div>
+            <div className="flex justify-between items-start mb-2">
+              <h3 className="font-semibold text-lg text-gray-800">{flower.name}</h3>
+              <span className="text-lg font-bold text-blue-600">
+                ${flower.price}
+              </span>
+            </div>
+            
+            <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+              {flower.description}
+            </p>
           </div>
-          
-          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-            {flower.description}
-          </p>
           
           <div className="text-xs text-gray-500">
             Shop: {flower.shop}
@@ -85,7 +87,7 @@ const FlowerCard = ({ flower }: FlowerCardProps) => {
         </div>
       </CardContent>
       
-      <CardFooter className="px-4 pb-4 pt-0 flex items-center gap-2">
+      <CardFooter className="p-4 pt-0 flex items-center gap-2 mt-auto">
         <div className="flex items-center border rounded-md">
           <Button
             variant="ghost"
