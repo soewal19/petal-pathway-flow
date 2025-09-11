@@ -110,9 +110,25 @@ const OrderDetails = () => {
             <Separator />
 
             {/* Total */}
-            <div className="flex justify-between items-center text-lg font-semibold">
-              <span>Total:</span>
-              <span className="text-blue-600">${order.total.toFixed(2)}</span>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Subtotal:</span>
+                <span>${order.originalTotal ? order.originalTotal.toFixed(2) : order.total.toFixed(2)}</span>
+              </div>
+              
+              {order.appliedCoupon && order.discountAmount && (
+                <div className="flex justify-between text-green-600">
+                  <span>Discount ({order.appliedCoupon.code}):</span>
+                  <span>-${order.discountAmount.toFixed(2)}</span>
+                </div>
+              )}
+              
+              <Separator />
+              
+              <div className="flex justify-between items-center text-lg font-semibold">
+                <span>Total:</span>
+                <span className="text-blue-600">${order.total.toFixed(2)}</span>
+              </div>
             </div>
 
             <Separator />

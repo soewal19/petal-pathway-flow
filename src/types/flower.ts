@@ -32,4 +32,12 @@ export interface Order {
   };
   orderDate: Date;
   shop: Shop;
+  appliedCoupon?: {
+    id: string;
+    name: string;
+    code: string;
+    discount: number;
+  } | null;
+  originalTotal?: number;
+  discountAmount?: number;
 }

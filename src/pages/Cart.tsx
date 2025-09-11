@@ -8,10 +8,12 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Trash2, Plus, Minus, ShoppingBag, Package, X, ShoppingCart, MapPin } from 'lucide-react';
+import { Trash2, Plus, Minus, ShoppingBag, Package, X, ShoppingCart, MapPin, Ticket, Tag } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
 import { shops } from '@/data/flowers';
+import { coupons } from '@/data/coupons';
+import { Coupon, AppliedCoupon } from '@/types/coupon';
 import MapboxMap from '@/components/MapboxMap';
 
 interface CustomerInfo {
@@ -36,6 +38,9 @@ const Cart = () => {
   const [errors, setErrors] = useState<Partial<CustomerInfo>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [useMapAddress, setUseMapAddress] = useState(false);
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
+  const [couponError, setCouponError] = useState('');
 
   const validateForm = () => {
     const newErrors: Partial<CustomerInfo> = {};
@@ -77,6 +82,50 @@ const Cart = () => {
     }
   };
 
+  const applyCoupon = () => {
+    if (!couponCode.trim()) {
+      setCouponError('Please enter a coupon code');
+      return;
+    }
+
+    const coupon = coupons.find(c => 
+      c.code.toLowerCase() === couponCode.toLowerCase() && 
+      c.isActive && 
+      c.expiryDate > new Date()
+    );
+
+    if (!coupon) {
+      setCouponError('Invalid or expired coupon code');
+      return;
+    }
+
+    const cartTotal = getCartTotal();
+    if (coupon.minOrderAmount && cartTotal < coupon.minOrderAmount) {
+      setCouponError(`Minimum order amount is $${coupon.minOrderAmount} for this coupon`);
+      return;
+    }
+
+    const discountAmount = (cartTotal * coupon.discount) / 100;
+    setAppliedCoupon({ coupon, discountAmount });
+    setCouponError('');
+    
+    toast({
+      title: "Coupon Applied!",
+      description: `You saved $${discountAmount.toFixed(2)} with code "${coupon.code}"`,
+    });
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode('');
+    setCouponError('');
+  };
+
+  const getFinalTotal = () => {
+    const cartTotal = getCartTotal();
+    return appliedCoupon ? cartTotal - appliedCoupon.discountAmount : cartTotal;
+  };
+
   const handleAddressSelect = (address: string, coordinates: [number, number]) => {
     setCustomerInfo(prev => ({
       ...prev,
@@ -110,10 +159,13 @@ const Cart = () => {
       const order = {
         id: orderId,
         items: cartItems,
-        total: getCartTotal(),
+        total: getFinalTotal(),
         customerInfo,
         orderDate: new Date(),
-        shop: shops[0] // For now, use first shop
+        shop: shops[0], // For now, use first shop
+        appliedCoupon: appliedCoupon?.coupon || null,
+        originalTotal: getCartTotal(),
+        discountAmount: appliedCoupon?.discountAmount || 0
       };
 
       // Simulate network delay
@@ -312,11 +364,79 @@ const Cart = () => {
             </div>
 
             <div className="border-t pt-4">
-              <div className="flex justify-between items-center mb-6">
-                <span className="text-lg font-semibold text-gray-800">Total price:</span>
-                <span className="text-2xl font-bold text-blue-600">${getCartTotal()}</span>
+              {/* Coupon Section */}
+              <div className="mb-4">
+                <Label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Have a coupon code?
+                </Label>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Enter coupon code"
+                    value={couponCode}
+                    onChange={(e) => {
+                      setCouponCode(e.target.value);
+                      setCouponError('');
+                    }}
+                    className={`flex-1 ${couponError ? 'border-red-500' : ''}`}
+                  />
+                  <Button 
+                    onClick={applyCoupon}
+                    variant="outline"
+                    disabled={!couponCode.trim()}
+                  >
+                    <Tag className="w-4 h-4 mr-1" />
+                    Apply
+                  </Button>
+                </div>
+                {couponError && (
+                  <p className="text-red-500 text-xs mt-1">{couponError}</p>
+                )}
+                {appliedCoupon && (
+                  <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-md">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-green-800">
+                          <Ticket className="w-4 h-4 inline mr-1" />
+                          {appliedCoupon.coupon.name} Applied
+                        </p>
+                        <p className="text-xs text-green-600">
+                          You saved ${appliedCoupon.discountAmount.toFixed(2)}
+                        </p>
+                      </div>
+                      <Button
+                        onClick={removeCoupon}
+                        size="sm"
+                        variant="ghost"
+                        className="text-green-700 hover:text-green-900"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
-              
+
+              {/* Order Summary */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Subtotal:</span>
+                  <span>${getCartTotal().toFixed(2)}</span>
+                </div>
+                
+                {appliedCoupon && (
+                  <div className="flex justify-between items-center text-green-600">
+                    <span>Discount ({appliedCoupon.coupon.code}):</span>
+                    <span>-${appliedCoupon.discountAmount.toFixed(2)}</span>
+                  </div>
+                )}
+                
+                <Separator />
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-semibold text-gray-800">Total:</span>
+                  <span className="text-2xl font-bold text-blue-600">${getFinalTotal().toFixed(2)}</span>
+                </div>
+              </div>
               <Button
                 onClick={handleSubmitOrder}
                 disabled={isSubmitting || cartItems.length === 0}
