@@ -15,7 +15,10 @@ const MapboxMap: React.FC<MapboxMapProps> = ({ onAddressSelect, initialAddress }
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const marker = useRef<mapboxgl.Marker | null>(null);
-  const [mapboxToken, setMapboxToken] = useState('');
+  const [mapboxToken, setMapboxToken] = useState(() => {
+    return localStorage.getItem('mapbox-token') || '';
+  });
+  const [inputToken, setInputToken] = useState('');
   const [selectedAddress, setSelectedAddress] = useState(initialAddress || '');
   const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
 
@@ -116,6 +119,13 @@ const MapboxMap: React.FC<MapboxMapProps> = ({ onAddressSelect, initialAddress }
     }
   };
 
+  const handleSetToken = () => {
+    if (inputToken.trim()) {
+      localStorage.setItem('mapbox-token', inputToken.trim());
+      setMapboxToken(inputToken.trim());
+    }
+  };
+
   if (!mapboxToken) {
     return (
       <div className="space-y-4 p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
@@ -134,11 +144,12 @@ const MapboxMap: React.FC<MapboxMapProps> = ({ onAddressSelect, initialAddress }
               id="mapbox-token"
               type="text"
               placeholder="pk.eyJ1IjoieW91ci11c2VybmFtZSIsImEiOiJjbGV..."
-              value={mapboxToken}
-              onChange={(e) => setMapboxToken(e.target.value)}
+              value={inputToken}
+              onChange={(e) => setInputToken(e.target.value)}
               className="flex-1"
+              onKeyPress={(e) => e.key === 'Enter' && handleSetToken()}
             />
-            <Button onClick={() => setMapboxToken(mapboxToken)} variant="outline">
+            <Button onClick={handleSetToken} variant="outline">
               Set Token
             </Button>
           </div>
