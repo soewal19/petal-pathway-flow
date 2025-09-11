@@ -159,7 +159,7 @@ const History = () => {
               }
               className="flex-1"
             />
-            <Button onClick={handleSearch} disabled={isSearching || !searchTerm.trim()}>
+            <Button onClick={handleSearch} disabled={isSearching}>
               {isSearching ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
@@ -176,7 +176,7 @@ const History = () => {
         </CardContent>
       </Card>
 
-      {/* Search Results */}
+      {/* Orders Display */}
       {isLoading ? (
         <Card>
           <CardContent className="text-center py-12">
@@ -288,9 +288,14 @@ const History = () => {
             <Card>
               <CardContent className="text-center py-12">
                 <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No Orders Found</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  {searchTerm.trim() ? 'No Orders Found' : 'No Orders Yet'}
+                </h3>
                 <p className="text-gray-600">
-                  We couldn't find any orders matching your search criteria. Please check your {searchType} and try again.
+                  {searchTerm.trim() 
+                    ? `We couldn't find any orders matching your search criteria. Please check your ${searchType} and try again.`
+                    : 'You haven\'t placed any orders yet. Start shopping to see your order history here!'
+                  }
                 </p>
               </CardContent>
             </Card>
