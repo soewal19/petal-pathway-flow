@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,25 +11,43 @@ import { Order } from '@/types/flower';
 const History = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState<'email' | 'phone' | 'id'>('email');
-  const [foundOrders, setFoundOrders] = useState<Order[]>([]);
+  const [allOrders, setAllOrders] = useState<Order[]>([]);
+  const [displayedOrders, setDisplayedOrders] = useState<Order[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load all orders on component mount
+  useEffect(() => {
+    const loadOrders = () => {
+      try {
+        const existingOrders = JSON.parse(localStorage.getItem('flowerOrders') || '[]') as Order[];
+        setAllOrders(existingOrders);
+        setDisplayedOrders(existingOrders);
+      } catch (error) {
+        console.error('Error loading orders:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadOrders();
+  }, []);
 
   const handleSearch = async () => {
-    if (!searchTerm.trim()) return;
+    if (!searchTerm.trim()) {
+      // If no search term, show all orders
+      setDisplayedOrders(allOrders);
+      return;
+    }
 
     setIsSearching(true);
-    setHasSearched(true);
 
     try {
       // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Get orders from localStorage
-      const existingOrders = JSON.parse(localStorage.getItem('flowerOrders') || '[]') as Order[];
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       // Filter orders based on search criteria
-      const filtered = existingOrders.filter(order => {
+      const filtered = allOrders.filter(order => {
         switch (searchType) {
           case 'email':
             return order.customerInfo.email.toLowerCase().includes(searchTerm.toLowerCase());
@@ -42,12 +60,17 @@ const History = () => {
         }
       });
 
-      setFoundOrders(filtered);
+      setDisplayedOrders(filtered);
     } catch (error) {
       console.error('Error searching orders:', error);
     } finally {
       setIsSearching(false);
     }
+  };
+
+  const clearSearch = () => {
+    setSearchTerm('');
+    setDisplayedOrders(allOrders);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -154,18 +177,34 @@ const History = () => {
       </Card>
 
       {/* Search Results */}
-      {hasSearched && (
+      {isLoading ? (
+        <Card>
+          <CardContent className="text-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-300 border-t-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading orders...</p>
+          </CardContent>
+        </Card>
+      ) : (
         <div className="space-y-4">
-          {foundOrders.length > 0 ? (
+          {displayedOrders.length > 0 ? (
             <>
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold">Found Orders</h2>
-                <Badge variant="secondary">
-                  {foundOrders.length} order{foundOrders.length !== 1 ? 's' : ''} found
-                </Badge>
+                <h2 className="text-xl font-semibold">
+                  {searchTerm.trim() ? 'Search Results' : 'All Orders'}
+                </h2>
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary">
+                    {displayedOrders.length} order{displayedOrders.length !== 1 ? 's' : ''}
+                  </Badge>
+                  {searchTerm.trim() && (
+                    <Button onClick={clearSearch} variant="outline" size="sm">
+                      Clear Search
+                    </Button>
+                  )}
+                </div>
               </div>
 
-              {foundOrders.map((order) => (
+              {displayedOrders.map((order) => (
                 <Card key={order.id} className="animate-fade-in">
                   <CardHeader>
                     <div className="flex items-center justify-between">
@@ -257,18 +296,6 @@ const History = () => {
             </Card>
           )}
         </div>
-      )}
-
-      {!hasSearched && (
-        <Card>
-          <CardContent className="text-center py-12">
-            <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Search for Your Orders</h3>
-            <p className="text-gray-600">
-              Enter your email, phone number, or order ID above to find your flower orders.
-            </p>
-          </CardContent>
-        </Card>
       )}
     </div>
   );
