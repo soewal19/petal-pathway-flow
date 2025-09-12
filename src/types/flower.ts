@@ -18,6 +18,10 @@ export interface Shop {
   id: string;
   name: string;
   location: string;
+  address: string;
+  phone: string;
+  hours: string;
+  coordinates: [number, number];
 }
 
 export interface Order {

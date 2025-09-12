@@ -8,17 +8,29 @@ export const shops: Shop[] = [
   {
     id: 'flowery-fragrant',
     name: 'Flowery Fragrant',
-    location: '123 Garden Street, Bloomville'
+    location: '123 Garden Street, Bloomville',
+    address: '123 Garden Street, Bloomville',
+    phone: '+1 (555) 123-4567',
+    hours: '9:00 AM - 8:00 PM',
+    coordinates: [30.5234, 50.4501] // Kiev center
   },
   {
     id: 'bloomwell',
     name: 'Bloomwell',
-    location: '456 Rose Avenue, Petalton'
+    location: '456 Rose Avenue, Petalton',
+    address: '456 Rose Avenue, Petalton',
+    phone: '+1 (555) 234-5678', 
+    hours: '8:00 AM - 9:00 PM',
+    coordinates: [30.5434, 50.4601] // Kiev north
   },
   {
     id: 'petals-paradise',
     name: 'Petals Paradise',
-    location: '789 Flower Road, Gardenville'
+    location: '789 Flower Road, Gardenville',
+    address: '789 Flower Road, Gardenville',
+    phone: '+1 (555) 345-6789',
+    hours: '10:00 AM - 7:00 PM', 
+    coordinates: [30.5034, 50.4401] // Kiev south
   }
 ];
 
