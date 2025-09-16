@@ -243,6 +243,9 @@ src/
 ![result](Screenshot_5.png)
 ![result](Screenshot_6.png)
 
+## Демонстрация работы приложения в браузере
+
+https://petal-pathway-flow.vercel.app/
 
 
 ## 🤝 Вклад в проект
